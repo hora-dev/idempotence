@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  redis:
+    build: .
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  java-app:
+    image: openjdk:17
+    container_name: java-app
+    depends_on:
+      - redis
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    command: ["sh", "-c", "javac -cp .:lib/* RedisIdemPotentCounter.java && java -cp .:lib/* RedisIdemPotentCounter"]
+    ports:
+      - "8080:8080"
